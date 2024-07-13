@@ -15,10 +15,15 @@ const Home: NextPage = () => {
   const [transactionSignature, setTransactionSignature] = useState<string>("");
   const [approveTransactionHash, setApproveTransactionHash] = useState<string>("");
   const [balance, setBalance] = useState<number | null>(null);
-  const [tokens, setTokens] = useState<Array<{ symbol: string; value: number; contractAddress: string }>>([]);
-  const [selectedToken, setSelectedToken] = useState<{ symbol: string; value: number; contractAddress: string } | null>(
-    null,
-  );
+  const [tokens, setTokens] = useState<
+    Array<{ symbol: string; value: number; contractAddress: string; chain: string }>
+  >([]);
+  const [selectedToken, setSelectedToken] = useState<{
+    symbol: string;
+    value: number;
+    contractAddress: string;
+    chain: string;
+  } | null>(null);
   const [amount, setAmount] = useState<string>("");
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const connectedAddress = primaryWallet?.address;
@@ -27,7 +32,7 @@ const Home: NextPage = () => {
     console.log(connectedAddress);
   };
 
-  const getWalletBalance = async () => {
+  const getWalletBalanceRootstock = async () => {
     try {
       if (!connectedAddress) {
         console.error("No connected address found.");
@@ -51,20 +56,16 @@ const Home: NextPage = () => {
       const tokenData = data.map((tokenBalance: any) => {
         const decimals = tokenBalance.token.decimals;
         const value = tokenBalance.value / 10 ** decimals;
+        const chain = tokenBalance.token.chain;
+        console.log("Token Balance Chain:", tokenBalance.token.chain);
         totalTokenBalances += value;
         let contractAddress = "";
         switch (tokenBalance.token.symbol) {
-          case "DAI":
-            contractAddress = "0xFF34B3d4Aee8ddCd6F9AFFFB6Fe49bD371b8a357";
+          case "USDT":
+            contractAddress = "0x37c8a8d955838581930D7194780eCBDAEd9414Bf";
             break;
           case "USDC":
-            contractAddress = "0x94a9D9AC8a22534E3FaCa9F4e7F2E2cf85d5E4C8";
-            break;
-          case "LINK":
-            contractAddress = "0xf8Fb3713D459D7C1018BD0A49D19b4C44290EBE5";
-            break;
-          case "AAVE":
-            contractAddress = "0x88541670E55cC00bEEFD87eB59EDd1b7C511AC9a";
+            contractAddress = "0x6e2fEa2905d48bf0996B628330D76516106c2eE1";
             break;
         }
         return {
@@ -112,7 +113,7 @@ const Home: NextPage = () => {
   //   }
   // };
 
-  const handleSupplyClick = (token: { symbol: string; value: number; contractAddress: string }) => {
+  const handleSupplyClick = (token: { symbol: string; value: number; contractAddress: string; chain: string }) => {
     setSelectedToken(token);
     setIsModalOpen(true);
   };
@@ -212,14 +213,14 @@ const Home: NextPage = () => {
 
   useEffect(() => {
     if (connectedAddress) {
-      getWalletBalance();
+      getWalletBalanceRootstock();
     }
   }, [connectedAddress]);
 
   return (
     <>
       <div className="flex items-center flex-col flex-grow pt-10 relative w-full">
-        <button onClick={() => getWalletBalance()} className="btn btn-primary absolute top-4 right-4">
+        <button onClick={() => getWalletBalanceRootstock()} className="btn btn-primary absolute top-4 right-4">
           Refresh
         </button>
         <div className="px-5 w-full">

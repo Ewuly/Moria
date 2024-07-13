@@ -1,5 +1,5 @@
 import { Wallet } from "@dynamic-labs/sdk-react-core";
-import { NetworkConfigurationMap } from "@dynamic-labs/types";
+import { GenericNetwork, NetworkConfigurationMap } from "@dynamic-labs/types";
 import { getOrMapViemChain } from "@dynamic-labs/viem-utils";
 import { Account, Chain, Hex, Transport, WalletClient, parseEther } from "viem";
 import { notification } from "~~/utils/scaffold-eth";
@@ -20,13 +20,21 @@ export const sendTransaction = async (
     const walletClient = wallet.connector.getWalletClient<WalletClient<Transport, Chain, Account>>();
 
     const chainID = await wallet.connector.getNetwork();
-    const currentNetwork = networkConfigurations.evm?.find(network => network.chainId === chainID);
+    const currentNetwork = networkConfigurations.evm?.find(
+      network => Number(network.chainId) === chainID,
+    ) as GenericNetwork;
 
     if (!currentNetwork) {
       throw new Error("Network not found");
     }
 
-    const chain = getOrMapViemChain(currentNetwork);
+    // Ensure the chainId is a number
+    const evmNetwork = {
+      ...currentNetwork,
+      chainId: Number(currentNetwork.chainId),
+    };
+
+    const chain = getOrMapViemChain(evmNetwork);
 
     const transaction = {
       account: wallet.address as Hex,

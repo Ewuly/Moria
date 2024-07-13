@@ -51,13 +51,14 @@ const Home: NextPage = () => {
       }
 
       const data = await response.json();
+      console.log("data", data);
 
       let totalTokenBalances = 0;
       const tokenData = data.map((tokenBalance: any) => {
         const decimals = tokenBalance.token.decimals;
         const value = tokenBalance.value / 10 ** decimals;
-        const chain = tokenBalance.token.chain;
-        console.log("Token Balance Chain:", tokenBalance.token.chain);
+        const chain = "Rootstock";
+        console.log("Token Balance Chain:", chain);
         totalTokenBalances += value;
         let contractAddress = "";
         switch (tokenBalance.token.symbol) {
@@ -66,6 +67,58 @@ const Home: NextPage = () => {
             break;
           case "USDC":
             contractAddress = "0x6e2fEa2905d48bf0996B628330D76516106c2eE1";
+            break;
+        }
+        return {
+          symbol: tokenBalance.token.symbol,
+          value: value,
+          contractAddress: contractAddress,
+          chain: chain,
+        };
+      });
+
+      setBalance(totalTokenBalances);
+      setTokens(tokenData);
+      console.log("Total Token Balances:", totalTokenBalances);
+    } catch (error) {
+      console.error("Error fetching token balances:", error);
+    }
+  };
+  const getWalletBalanceNeon = async () => {
+    try {
+      if (!connectedAddress) {
+        console.error("No connected address found.");
+        return;
+      }
+
+      const apiUrl = `https://neon-devnet.blockscout.com/api/v2/addresses/${connectedAddress}/token-balances`;
+      const response = await fetch(apiUrl, {
+        headers: {
+          Accept: "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch token balances. Status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log("data", data);
+
+      let totalTokenBalances = 0;
+      const tokenData = data.map((tokenBalance: any) => {
+        const decimals = tokenBalance.token.decimals;
+        const value = tokenBalance.value / 10 ** decimals;
+        const chain = "Neon";
+        console.log("Token Balance Chain:", chain);
+        totalTokenBalances += value;
+        let contractAddress = "";
+        switch (tokenBalance.token.symbol) {
+          case "USDT":
+            contractAddress = "0x3669e715f85a8af961568d735cd400028f5595E5";
+            break;
+          case "USDC":
+            contractAddress = "0xc1C6be58dB908570E98A85f2660162D9b5e66c5f";
             break;
         }
         return {
@@ -212,16 +265,22 @@ const Home: NextPage = () => {
     }
   };
 
+  const getWalletBalance = async () => {
+    getWalletBalanceRootstock();
+    getWalletBalanceNeon();
+  };
+
   useEffect(() => {
     if (connectedAddress) {
       getWalletBalanceRootstock();
+      getWalletBalanceNeon();
     }
   }, [connectedAddress]);
 
   return (
     <>
       <div className="flex items-center flex-col flex-grow pt-10 relative w-full">
-        <button onClick={() => getWalletBalanceRootstock()} className="btn btn-primary absolute top-4 right-4">
+        <button onClick={() => getWalletBalance()} className="btn btn-primary absolute top-4 right-4">
           Refresh
         </button>
         <div className="px-5 w-full">
@@ -287,15 +346,14 @@ const Home: NextPage = () => {
               <MagnifyingGlassIcon className="h-8 w-8 fill-secondary" />
               <p className="my-2 font-medium">Assets to supply</p>
               <div className="flex w-full justify-between items-center">
-                <p className="font-medium">Asset | Balance</p>
+                <p className="font-medium">Asset | Balance | Chain</p>
               </div>
               <div className="w-full">
                 {tokens.map(token => (
                   <div key={token.symbol} className="mb-4 flex justify-between items-center w-full">
                     <p className="flex-grow">
-                      {token.symbol} | {token.value}
+                      {token.symbol} | {token.value} | {token.chain}
                     </p>
-                    <p className="flex-grow">{token.chain}</p>
                     <div className="flex space-x-2">
                       <button className="btn btn-primary" onClick={() => handleSupplyClick(token)}>
                         Supply

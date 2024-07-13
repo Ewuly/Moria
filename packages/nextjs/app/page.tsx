@@ -72,6 +72,7 @@ const Home: NextPage = () => {
           symbol: tokenBalance.token.symbol,
           value: value,
           contractAddress: contractAddress,
+          chain: chain,
         };
       });
 
@@ -230,20 +231,20 @@ const Home: NextPage = () => {
           </h1>
           <div className="flex justify-center items-center space-x-2 flex-col sm:flex-row">
             <p className="my-2 font-medium">Connected Address:</p>
-            <Address address={connectedAddress} />
+            <Address address={connectedAddress as `0x${string}`} />
           </div>
           <p className="flex justify-center items-center">Balance: {balance !== null ? `${balance}$` : "Loading..."}</p>
         </div>
 
         <div className="flex-grow bg-base-300 w-full mt-16 px-8 py-12">
           <div className="flex justify-between items-center gap-12 flex-col sm:flex-row">
-            <div className="flex flex-col bg-base-100 px-10 py-10 items-center w-full max-w-md rounded-3xl mb-8 mx-auto">
+            <div className="flex flex-col bg-base-100 px-10 py-10 items-center w-full max-w-xl rounded-3xl mb-8 mx-auto">
               <BugAntIcon className="h-8 w-8 fill-secondary" />
               <p className="my-2 font-medium">Your supplies</p>
               <div className="flex w-full justify-between items-center">
                 <p className="font-medium">Asset | Balance</p>
               </div>
-              <div className="w-full">
+              {/* <div className="w-full">
                 {tokens.map(token => (
                   <div key={token.symbol} className="mb-4 flex justify-between items-center w-full">
                     <p className="flex-grow">
@@ -255,15 +256,15 @@ const Home: NextPage = () => {
                     </div>
                   </div>
                 ))}
-              </div>
+              </div> */}
             </div>
-            <div className="flex flex-col bg-base-100 px-10 py-10 items-center w-full max-w-md rounded-3xl mx-auto">
+            <div className="flex flex-col bg-base-100 px-10 py-10 items-center w-full max-w-xl rounded-3xl mx-auto">
               <MagnifyingGlassIcon className="h-8 w-8 fill-secondary" />
               <p className="my-2 font-medium">Your borrows</p>
               <div className="flex w-full justify-between items-center">
                 <p className="font-medium">Asset | Balance</p>
               </div>
-              <div className="w-full">
+              {/* <div className="w-full">
                 {tokens.map(token => (
                   <div key={token.symbol} className="mb-4 flex justify-between items-center w-full">
                     <p className="flex-grow">
@@ -277,12 +278,12 @@ const Home: NextPage = () => {
                     </div>
                   </div>
                 ))}
-              </div>
+              </div> */}
             </div>
           </div>
 
           <div className="flex justify-between items-center gap-12 flex-col sm:flex-row">
-            <div className="flex flex-col bg-base-100 px-10 py-10 items-center w-full max-w-md rounded-3xl mb-8 mx-auto">
+            <div className="flex flex-col bg-base-100 px-10 py-10 items-center w-full max-w-xl rounded-3xl mb-8 mx-auto">
               <MagnifyingGlassIcon className="h-8 w-8 fill-secondary" />
               <p className="my-2 font-medium">Assets to supply</p>
               <div className="flex w-full justify-between items-center">
@@ -303,13 +304,13 @@ const Home: NextPage = () => {
                 ))}
               </div>
             </div>
-            <div className="flex flex-col bg-base-100 px-10 py-10 items-center w-full max-w-md rounded-3xl mx-auto">
+            <div className="flex flex-col bg-base-100 px-10 py-10 items-center w-full max-w-xl rounded-3xl mx-auto">
               <MagnifyingGlassIcon className="h-8 w-8 fill-secondary" />
               <p className="my-2 font-medium">Assets to borrow</p>
               <div className="flex w-full justify-between items-center">
                 <p className="font-medium">Asset | Balance</p>
               </div>
-              <div className="w-full">
+              {/* <div className="w-full">
                 {tokens.map(token => (
                   <div key={token.symbol} className="mb-4 flex justify-between items-center w-full">
                     <p className="flex-grow">
@@ -322,7 +323,7 @@ const Home: NextPage = () => {
                     </div>
                   </div>
                 ))}
-              </div>
+              </div> */}
             </div>
           </div>
         </div>

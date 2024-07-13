@@ -8,6 +8,15 @@
 
 🧪A lending multi-chain platform which enables cross-chain interactions between Bitcoin, Ethereum, and Solana.
 
+## The project 
+Moria is a multi-chain lending platform that enables seamless cross-chain interactions between Bitcoin, Ethereum, and Solana.
+
+Read the Lite Paper: 
+
+**Rootstock**: We integrated Rootstock to facilitate native exchanges between Bitcoin and Ethereum, allowing users to lend Bitcoin and obtain Ether seamlessly. Building on Rootstock was a smooth experience due to its robust documentation and active developer community, which provided valuable support and resources throughout the integration process. 
+
+
+
 ## Requirements
 
 Before you begin, you need to install the following tools:
@@ -119,6 +128,14 @@ If your allowance is lower than the amount to transfer, you are asked to execute
 ### Blockscout for Checking Transactions
 
 In the "Transactions" section, users can view all transactions executed by the Safe smart wallet within the session. The app integrates the [Blockscout API](https://docs.blockscout.com/for-users/api) to fetch and display transaction details, providing a transparent and user-friendly way to track activities.
+
+## Team
+Maksym Andrushkiv: Head of Content & Communication @KRYPTOSPHERE – Business Manager. Over 3 years of experience in crypto. Participated in over 10 hackathons. Contributed to marketing production for several startups, creating strategies for their projects.
+
+Charles-André Goichot: Over 3 years of experience in development. Software Developer. Full Stack Developer. Participated in over 10 hackathons worldwide.
+
+Ewan Hamon: Over 4 years of experience in development. Blockchain Developer. Junior Software Engineer. Specializes in Rust & Smart Contract development. Web3 & Blockchain development. Full Stack Web3 Developer. Participated in over 10 hackathons worldwide. 
+
 
 
 ## Further Documentation

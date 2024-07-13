@@ -15,7 +15,11 @@ Read the Lite Paper:
 
 **Rootstock**: We integrated Rootstock to facilitate native exchanges between Bitcoin and Ethereum, allowing users to lend Bitcoin and obtain Ether seamlessly. Building on Rootstock was a smooth experience due to its robust documentation and active developer community, which provided valuable support and resources throughout the integration process. 
 
+**Neon EVM**: By leveraging Neon EVM, users can lend Solana tokens and lock them to then borrow on Ethereum or Bitcoin, thereby gaining exposure to Solana.
 
+**Blockscout**: By integrating Blockscout and its API, we can track token balances, transactions, and addresses in real-time. Blockscout is a full-featured, open-source block explorer that supports multiple chains. Applications can use Blockscout similarly to other explorers to track transactions, verify and interact with smart contracts, and connect with APIs to enable application functionality. Blockscout offers several APIs, including RPC endpoints, ETH RPC endpoints, and REST API endpoints.
+
+**Dynamic Wallet**: To provide users with a unified interface for managing wallets on Bitcoin, Ethereum, and Solana, enhancing the cross-chain experience.
 
 ## Requirements
 

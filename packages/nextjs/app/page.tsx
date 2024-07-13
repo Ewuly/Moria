@@ -34,7 +34,7 @@ const Home: NextPage = () => {
         return;
       }
 
-      const apiUrl = `https://eth-sepolia.blockscout.com/api/v2/addresses/${connectedAddress}/token-balances`;
+      const apiUrl = `https://rootstock-testnet.blockscout.com/api/v2/addresses/${connectedAddress}/token-balances`;
       const response = await fetch(apiUrl, {
         headers: {
           Accept: "application/json",

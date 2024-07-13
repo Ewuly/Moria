@@ -1,6 +1,6 @@
 #  🏗 Moria (Eth GLobal Brussels 2024)
 
-![](./banner.png)
+![](./![Capture d'écran 2024-07-13 211900](https://github.com/user-attachments/assets/56acd210-5ac3-49bc-bd05-9e741c8b7a20))
 
 <h4 align="center">
   <a href="https://www.youtube.com/watch?v=dkONR9dJD2g">Video Walkthrough</a>

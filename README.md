@@ -1,4 +1,4 @@
-#  🏗 Scaffold-ETH 2 (Hackathon Starter Kit Version)
+#  🏗 Moria (Eth GLobal Brussels 2024)
 
 ![](./banner.png)
 
@@ -6,7 +6,7 @@
   <a href="https://www.youtube.com/watch?v=dkONR9dJD2g">Video Walkthrough</a>
 </h4>
 
-🧪 An open-source, up-to-date toolkit for building decentralized applications (dapps) on the Ethereum blockchain. It's designed to make it easier for developers to create and deploy smart contracts and build user interfaces that interact with those contracts as well as add EthGlobal partner technology such as account abstraction, chain abstraction, onboarding, transaction exploring, EVM networks, custom chains and much more!
+🧪A lending multi-chain platform which enables cross-chain interactions between Bitcoin, Ethereum, and Solana.
 
 ## Requirements
 

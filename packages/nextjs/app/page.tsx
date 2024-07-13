@@ -295,6 +295,7 @@ const Home: NextPage = () => {
                     <p className="flex-grow">
                       {token.symbol} | {token.value}
                     </p>
+                    <p className="flex-grow">{token.chain}</p>
                     <div className="flex space-x-2">
                       <button className="btn btn-primary" onClick={() => handleSupplyClick(token)}>
                         Supply

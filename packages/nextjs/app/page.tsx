@@ -16,9 +16,12 @@ const Home: NextPage = () => {
   const [approveTransactionHash, setApproveTransactionHash] = useState<string>("");
   const [balance, setBalance] = useState<number | null>(null);
   const [tokens, setTokens] = useState<Array<{ symbol: string; value: number; contractAddress: string }>>([]);
-  const [selectedToken, setSelectedToken] = useState<{ symbol: string; value: number; contractAddress: string } | null>(
-    null,
-  );
+  const [selectedToken, setSelectedToken] = useState<{
+    symbol: string;
+    value: number;
+    contractAddress: string;
+    chain: string;
+  } | null>(null);
   const [amount, setAmount] = useState<string>("");
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const connectedAddress = primaryWallet?.address;
@@ -27,7 +30,7 @@ const Home: NextPage = () => {
     console.log(connectedAddress);
   };
 
-  const getWalletBalance = async () => {
+  const getWalletBalanceRoostock = async () => {
     try {
       if (!connectedAddress) {
         console.error("No connected address found.");
@@ -51,6 +54,7 @@ const Home: NextPage = () => {
       const tokenData = data.map((tokenBalance: any) => {
         const decimals = tokenBalance.token.decimals;
         const value = tokenBalance.value / 10 ** decimals;
+        const chain = "Rootstock";
         totalTokenBalances += value;
         let contractAddress = "";
         switch (tokenBalance.token.symbol) {

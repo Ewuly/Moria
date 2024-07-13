@@ -95,22 +95,22 @@ const Home: NextPage = () => {
     }
   };
 
-  const handleSendTransaction = async () => {
-    try {
-      const isTestnet = await primaryWallet?.connector?.isTestnet();
-      if (!isTestnet) {
-        alert("You're not on a testnet, proceed with caution.");
-      }
-      const hash = await sendTransaction(connectedAddress, "0.0001", primaryWallet, networkConfigurations);
-      setTransactionSignature(hash);
+  // const handleSendTransaction = async () => {
+  //   try {
+  //     const isTestnet = await primaryWallet?.connector?.isTestnet();
+  //     if (!isTestnet) {
+  //       alert("You're not on a testnet, proceed with caution.");
+  //     }
+  //     const hash = await sendTransaction(connectedAddress, "0.0001", primaryWallet, networkConfigurations);
+  //     setTransactionSignature(hash);
 
-      setTimeout(() => {
-        setTransactionSignature("");
-      }, 10000);
-    } catch (e) {
-      console.error(e);
-    }
-  };
+  //     setTimeout(() => {
+  //       setTransactionSignature("");
+  //     }, 10000);
+  //   } catch (e) {
+  //     console.error(e);
+  //   }
+  // };
 
   const handleSupplyClick = (token: { symbol: string; value: number; contractAddress: string }) => {
     setSelectedToken(token);

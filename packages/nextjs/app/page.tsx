@@ -18,7 +18,15 @@ const Home: NextPage = () => {
   const [messageSignature, setMessageSignature] = useState<string>("");
   const [transactionSignature, setTransactionSignature] = useState<string>("");
   const [approveTransactionHash, setApproveTransactionHash] = useState<string>("");
+  const [balanceRootstock, setBalanceRootstock] = useState<number | null>(null);
+  const [balanceNeon, setBalanceNeon] = useState<number | null>(null);
   const [balance, setBalance] = useState<number | null>(null);
+  const [tokensRootstock, setTokensRootstock] = useState<
+    Array<{ symbol: string; value: number; contractAddress: string; chain: string }>
+  >([]);
+  const [tokensNeon, setTokensNeon] = useState<
+    Array<{ symbol: string; value: number; contractAddress: string; chain: string }>
+  >([]);
   const [tokens, setTokens] = useState<
     Array<{ symbol: string; value: number; contractAddress: string; chain: string }>
   >([]);
@@ -65,12 +73,15 @@ const Home: NextPage = () => {
         console.log("Token Balance Chain:", chain);
         totalTokenBalances += value;
         let contractAddress = "";
+        let contractABI;
         switch (tokenBalance.token.symbol) {
           case "USDT":
-            contractAddress = "0x37c8a8d955838581930D7194780eCBDAEd9414Bf";
+            contractAddress = approveUSDTRootstockAddress;
+            contractABI = approveUSDTRootstockABI;
             break;
           case "USDC":
-            contractAddress = "0x6e2fEa2905d48bf0996B628330D76516106c2eE1";
+            contractAddress = approveUSDCRootstockAddress;
+            contractABI = approveUSDCRootstockABI;
             break;
         }
         return {
@@ -81,8 +92,8 @@ const Home: NextPage = () => {
         };
       });
 
-      setBalance(totalTokenBalances);
-      setTokens(tokenData);
+      setBalanceRootstock(totalTokenBalances);
+      setTokensRootstock(tokenData);
       console.log("Total Token Balances:", totalTokenBalances);
     } catch (error) {
       console.error("Error fetching token balances:", error);
@@ -114,15 +125,18 @@ const Home: NextPage = () => {
         const decimals = tokenBalance.token.decimals;
         const value = tokenBalance.value / 10 ** decimals;
         const chain = "Neon";
-        console.log("Token Balance Chain:", chain);
+        // console.log("Token Balance Chain:", chain);
         totalTokenBalances += value;
         let contractAddress = "";
+        let contractABI;
         switch (tokenBalance.token.symbol) {
           case "USDT":
-            contractAddress = "0x3669e715f85a8af961568d735cd400028f5595E5";
+            contractAddress = approveUSDTNeonAddress;
+            contractABI = approveUSDTNeonABI;
             break;
           case "USDC":
-            contractAddress = "0xc1C6be58dB908570E98A85f2660162D9b5e66c5f";
+            contractAddress = approveUSDCNeonAddress;
+            contractABI = approveUSDCNeonABI;
             break;
         }
         return {
@@ -133,8 +147,13 @@ const Home: NextPage = () => {
         };
       });
 
-      setBalance(totalTokenBalances);
-      setTokens(tokenData);
+      setBalanceNeon(totalTokenBalances);
+      setTokensNeon(tokenData);
+      console.log("symbol", tokensNeon[0].symbol); // Accessing symbol property of the first token in the array
+      console.log("value", tokensNeon[0].value); // Accessing symbol property of the first token in the array
+      console.log("contractAddress", tokensNeon[0].contractAddress); // Accessing symbol property of the first token in the array
+      console.log("chain", tokensNeon[0].chain); // Accessing symbol property of the first token in the array
+
       console.log("Total Token Balances:", totalTokenBalances);
     } catch (error) {
       console.error("Error fetching token balances:", error);
@@ -193,21 +212,15 @@ const Home: NextPage = () => {
       const tokenContract = new ethers.Contract(selectedToken.contractAddress, contractABI, signer);
 
       // Define the arguments
-      const _amount = ethers.utils.parseUnits(amount, 18);
-      const _depositTokenAddress = contractAddress; // This is the address of the deposit contract
-      const _owner = connectedAddress; // The address of the user
-
-      // Set a manual gas limit
-      const manualGasLimit = 100000; // Example gas limit, adjust as necessary
+      const _amount = ethers.utils.parseUnits(amount, 18); // Convert amount to uint256 (wei)
+      const spenderAddress = connectedAddress; // Replace with the address you want to approve tokens for
 
       // Send the transaction with a manual gas limit
-      const tx = await tokenContract.approve(_amount, _depositTokenAddress, _owner, {
-        gasLimit: manualGasLimit, // Setting manual gas limit
-      });
+      const tx = await tokenContract.approve(spenderAddress, _amount);
       await tx.wait();
       setApproveTransactionHash(tx.hash); // Store the transaction hash
 
-      console.log(`Approved ${amount} ${selectedToken.symbol} to ${contractAddress}`);
+      console.log(`Approved ${amount} ${selectedToken.symbol} to ${spenderAddress}`);
     } catch (error) {
       console.error("Error approving token:", error);
     }
@@ -274,10 +287,30 @@ const Home: NextPage = () => {
     getWalletBalanceNeon();
   };
 
+  const getBalance = async () => {
+    // Check if balanceNeon and balanceRootstock are not null
+    if (balanceNeon !== null) {
+      const total = balanceNeon;
+      console.log("total", total);
+      setBalance(total);
+    } else {
+      // Handle the case where either balanceNeon or balanceRootstock is null
+      console.error("balanceNeon or balanceRootstock is null.");
+    }
+  };
+
+  const getToken = async () => {
+    const total = tokensNeon;
+    console.log("tokens", total);
+    setTokens(total);
+  };
+
   useEffect(() => {
     if (connectedAddress) {
-      getWalletBalanceRootstock();
+      // getBalance();
+      // getToken();
       getWalletBalanceNeon();
+      getToken();
     }
   }, [connectedAddress]);
 
@@ -321,6 +354,7 @@ const Home: NextPage = () => {
                 ))}
               </div> */}
             </div>
+
             <div className="flex flex-col bg-base-100 px-10 py-10 items-center w-full max-w-xl rounded-3xl mx-auto">
               <MagnifyingGlassIcon className="h-8 w-8 fill-secondary" />
               <p className="my-2 font-medium">Your borrows</p>

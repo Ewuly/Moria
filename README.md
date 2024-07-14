@@ -3,7 +3,7 @@
 ![Capture d'écran 2024-07-13 211900](https://github.com/user-attachments/assets/56acd210-5ac3-49bc-bd05-9e741c8b7a20)
 
 <h4 align="center">
-  <a href="">Video Walkthrough</a>
+  <a href="https://youtu.be/BQGGcMoV13M">Video Walkthrough</a>
 </h4>
 
 🧪A lending multi-chain platform which enables cross-chain interactions between Bitcoin, Ethereum, and Solana.

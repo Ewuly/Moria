@@ -1,5 +1,5 @@
-export const contractAddress = "0xd9a76aCd1058187a23a2729482eDecc6110B2DBe";
-export const contractABI = [
+export const neonContractAddress = "0xd9a76aCd1058187a23a2729482eDecc6110B2DBe";
+export const neonContractABI = [
   { inputs: [], stateMutability: "nonpayable", type: "constructor" },
   { inputs: [{ internalType: "address", name: "owner", type: "address" }], name: "OwnableInvalidOwner", type: "error" },
   {

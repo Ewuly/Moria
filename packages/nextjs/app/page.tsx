@@ -1,16 +1,19 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { FC } from "react";
 import { useDynamicContext } from "@dynamic-labs/sdk-react-core";
 import { ethers } from "ethers";
 import type { NextPage } from "next";
+import { useWriteContract } from "wagmi";
 import { BugAntIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { Address } from "~~/components/scaffold-eth";
 import { approveUSDCNeonABI, approveUSDCNeonAddress } from "~~/contracts/approveUSDCNeon";
 import { approveUSDCRootstockABI, approveUSDCRootstockAddress } from "~~/contracts/approveUSDCRootstock";
 import { approveUSDTNeonABI, approveUSDTNeonAddress } from "~~/contracts/approveUSDTNeon";
 import { approveUSDTRootstockABI, approveUSDTRootstockAddress } from "~~/contracts/approveUSDTRootstock";
-import { contractABI, contractAddress } from "~~/contracts/depositContract";
+import { neonContractABI, neonContractAddress } from "~~/contracts/depositContractNEON";
+import { rootstockContractABI, rootstockContractAddress } from "~~/contracts/depositContractRootstock";
 import { sendTransaction, signMessage } from "~~/lib/dynamic";
 
 const Home: NextPage = () => {
@@ -21,6 +24,7 @@ const Home: NextPage = () => {
   const [balanceRootstock, setBalanceRootstock] = useState<number | null>(null);
   const [balanceNeon, setBalanceNeon] = useState<number | null>(null);
   const [balance, setBalance] = useState<number | null>(null);
+  const [approvalContractABI, setapprovalContractABI] = useState<any>("");
   const [tokensRootstock, setTokensRootstock] = useState<
     Array<{ symbol: string; value: number; contractAddress: string; chain: string }>
   >([]);
@@ -39,7 +43,7 @@ const Home: NextPage = () => {
   const [amount, setAmount] = useState<string>("");
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const connectedAddress = primaryWallet?.address;
-
+  const { data: hash, error, isPending, writeContract } = useWriteContract();
   const logAddress = async () => {
     console.log(connectedAddress);
   };
@@ -128,15 +132,14 @@ const Home: NextPage = () => {
         // console.log("Token Balance Chain:", chain);
         totalTokenBalances += value;
         let contractAddress = "";
-        let contractABI;
         switch (tokenBalance.token.symbol) {
           case "USDT":
             contractAddress = approveUSDTNeonAddress;
-            contractABI = approveUSDTNeonABI;
+            setapprovalContractABI(approveUSDTNeonABI);
             break;
           case "USDC":
             contractAddress = approveUSDCNeonAddress;
-            contractABI = approveUSDCNeonABI;
+            setapprovalContractABI(approveUSDCNeonABI);
             break;
         }
         return {
@@ -206,21 +209,17 @@ const Home: NextPage = () => {
         console.error("Invalid amount.");
         return;
       }
+      const _amount = ethers.utils.parseUnits(amount, 18);
+      await writeContract({
+        address: approveUSDCRootstockAddress,
+        abi: approveUSDCRootstockABI,
+        functionName: "approve",
+        args: [rootstockContractAddress, _amount],
+      });
+      setApproveTransactionHash(hash); // Store the transaction hash
+      console.log("store the hash");
 
-      const provider = new ethers.providers.Web3Provider((window as any).ethereum);
-      const signer = provider.getSigner();
-      const tokenContract = new ethers.Contract(selectedToken.contractAddress, contractABI, signer);
-
-      // Define the arguments
-      const _amount = ethers.utils.parseUnits(amount, 18); // Convert amount to uint256 (wei)
-      const spenderAddress = connectedAddress; // Replace with the address you want to approve tokens for
-
-      // Send the transaction with a manual gas limit
-      const tx = await tokenContract.approve(spenderAddress, _amount);
-      await tx.wait();
-      setApproveTransactionHash(tx.hash); // Store the transaction hash
-
-      console.log(`Approved ${amount} ${selectedToken.symbol} to ${spenderAddress}`);
+      console.log(`Approved ${amount} ${selectedToken.symbol} to xoxox`);
     } catch (error) {
       console.error("Error approving token:", error);
     }
@@ -238,23 +237,14 @@ const Home: NextPage = () => {
         return;
       }
 
-      const provider = new ethers.providers.Web3Provider((window as any).ethereum);
-      const signer = provider.getSigner();
-      const contract = new ethers.Contract(contractAddress, contractABI, signer);
-
-      // Define the arguments
       const _amount = ethers.utils.parseUnits(amount, 18);
       const _depositTokenAddress = selectedToken.contractAddress;
-
-      // Set a manual gas limit
-      const manualGasLimit = 1000000; // Example gas limit, adjust as necessary
-
-      // Call the deposit function with a manual gas limit
-      const tx = await contract.deposit(_amount, _depositTokenAddress, {
-        gasLimit: manualGasLimit, // Setting manual gas limit
+      await writeContract({
+        address: rootstockContractAddress,
+        abi: rootstockContractABI,
+        functionName: "deposit",
+        args: [_amount, approveUSDCRootstockAddress],
       });
-      await tx.wait();
-
       console.log(`Supply ${selectedToken.symbol} with amount ${amount}`);
     } catch (error) {
       console.error("Error calling deposit function:", error);
@@ -270,7 +260,7 @@ const Home: NextPage = () => {
 
       const provider = new ethers.providers.Web3Provider((window as any).ethereum);
       const signer = provider.getSigner();
-      const contract = new ethers.Contract(contractAddress, contractABI, signer);
+      const contract = new ethers.Contract(rootstockContractAddress, rootstockContractABI, signer);
 
       // Call the borrow function
       const tx = await contract.borrow(ethers.utils.parseUnits(amount, 18), token.contractAddress);
@@ -407,7 +397,7 @@ const Home: NextPage = () => {
               <div className="flex w-full justify-between items-center">
                 <p className="font-medium">Asset | Balance</p>
               </div>
-              {/* <div className="w-full">
+              <div className="w-full">
                 {tokens.map(token => (
                   <div key={token.symbol} className="mb-4 flex justify-between items-center w-full">
                     <p className="flex-grow">
@@ -420,7 +410,7 @@ const Home: NextPage = () => {
                     </div>
                   </div>
                 ))}
-              </div> */}
+              </div>
             </div>
           </div>
         </div>

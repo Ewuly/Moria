@@ -6,6 +6,10 @@ import { ethers } from "ethers";
 import type { NextPage } from "next";
 import { BugAntIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { Address } from "~~/components/scaffold-eth";
+import { approveUSDCNeonABI, approveUSDCNeonAddress } from "~~/contracts/approveUSDCNeon";
+import { approveUSDCRootstockABI, approveUSDCRootstockAddress } from "~~/contracts/approveUSDCRootstock";
+import { approveUSDTNeonABI, approveUSDTNeonAddress } from "~~/contracts/approveUSDTNeon";
+import { approveUSDTRootstockABI, approveUSDTRootstockAddress } from "~~/contracts/approveUSDTRootstock";
 import { contractABI, contractAddress } from "~~/contracts/depositContract";
 import { sendTransaction, signMessage } from "~~/lib/dynamic";
 
